@@ -662,7 +662,7 @@ html.menu-open {
 
 /* Homepage sections */
 .section {
-	margin: 4rem 0;
+	margin-block: 4rem;
 }
 .section-head-spaced {
 	margin-top: 3rem;
