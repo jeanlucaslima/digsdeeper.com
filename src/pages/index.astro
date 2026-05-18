@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import ArchiveList from '../components/ArchiveList.astro';
+import { formatDate } from '../lib/format';
 
 const essays = (await getCollection('essays', ({ data }) => !data.draft)).sort(
 	(a, b) => b.data.published.getTime() - a.data.published.getTime(),
@@ -13,62 +14,111 @@ const allSeries = (await getCollection('series')).sort(
 	(a, b) => b.data.started.getTime() - a.data.started.getTime(),
 );
 
-const featured = allSeries.find((s) => s.id === 'the-great-arch-of-digitalization') ?? allSeries[0];
+const currentEssay = essays[0];
+const ongoingSeries =
+	allSeries.find((s) => s.id === 'the-great-arch-of-digitalization') ??
+	allSeries.find((s) => s.data.status === 'Active') ??
+	allSeries[0];
 
-const essayEntries = essays.slice(0, 5).map((e) => ({
-	href: `/essays/${e.id}`,
-	title: e.data.title,
-	date: e.data.published,
-	gloss: e.data.thesis,
-	tags: ['Essay', e.data.field ?? e.data.topics[0]].filter(Boolean) as string[],
-}));
+type Combined = {
+	href: string;
+	title: string;
+	date: Date;
+	gloss: string;
+	type: 'Essay' | 'Note';
+	field: string | undefined;
+};
 
-const noteEntries = notes.slice(0, 5).map((n) => ({
-	href: `/notes/${n.id}`,
-	title: n.data.title,
-	date: n.data.published,
-	gloss: n.data.claim,
-	tags: ['Note', n.data.field ?? n.data.topics[0]].filter(Boolean) as string[],
+const combined: Combined[] = [
+	...essays.map((e) => ({
+		href: `/essays/${e.id}`,
+		title: e.data.title,
+		date: e.data.published,
+		gloss: e.data.thesis,
+		type: 'Essay' as const,
+		field: e.data.field ?? e.data.topics[0],
+	})),
+	...notes.map((n) => ({
+		href: `/notes/${n.id}`,
+		title: n.data.title,
+		date: n.data.published,
+		gloss: n.data.claim,
+		type: 'Note' as const,
+		field: n.data.field ?? n.data.topics[0],
+	})),
+]
+	.sort((a, b) => b.date.getTime() - a.date.getTime())
+	.slice(0, 8);
+
+const latestEntries = combined.map((c) => ({
+	href: c.href,
+	title: c.title,
+	date: c.date,
+	gloss: c.gloss,
+	tags: [c.type, c.field].filter(Boolean) as string[],
 }));
 ---
 
 <Layout>
-	<section class="container hero">
-		<h1>Serious essays about software, strategy, AI, systems, and technology culture.</h1>
-		<p>Long-form arguments, working notes, and investigations by <a href="https://jeanlucas.me">Jean Lucas Lima</a>.</p>
+	<section class="container hero hero-compact">
+		<h1 class="hero-tagline">Serious essays about software, strategy, AI, systems, and technology culture.</h1>
+		<p class="hero-byline">
+			Long-form arguments, working notes, and investigations by
+			<a href="https://jeanlucas.me">Jean Lucas Lima</a>.
+		</p>
+	</section>
 
+	<section class="container featured-row" aria-label="Current writing">
 		{
-			featured && (
-				<aside class="featured" aria-label="Featured investigation">
-					<span class="label">Featured investigation</span>
-					<p class="question">
-						<a href={`/series/${featured.id}`}>{featured.data.title}</a>
+			currentEssay && (
+				<article class="featured-block">
+					<span class="featured-label">Current essay</span>
+					<h2 class="featured-title">
+						<a href={`/essays/${currentEssay.id}`}>{currentEssay.data.title}</a>
+					</h2>
+					<p class="featured-thesis">{currentEssay.data.thesis}</p>
+					<p class="featured-meta">
+						<span>Essay</span>
+						<span>{formatDate(currentEssay.data.published)}</span>
+						{currentEssay.data.field && <span>{currentEssay.data.field}</span>}
 					</p>
-					<p class="gloss">{featured.data.central_question}</p>
-				</aside>
+				</article>
+			)
+		}
+		{
+			ongoingSeries && (
+				<article class="featured-block">
+					<span class="featured-label">Ongoing investigation</span>
+					<h2 class="featured-title">
+						<a href={`/series/${ongoingSeries.id}`}>{ongoingSeries.data.title}</a>
+					</h2>
+					<p class="featured-thesis">{ongoingSeries.data.central_question}</p>
+					<p class="featured-meta">
+						<span>Series</span>
+						<span>{ongoingSeries.data.status}</span>
+					</p>
+				</article>
 			)
 		}
 	</section>
 
 	<section class="container section">
 		<div class="section-head">
-			<h2>Latest essays</h2>
+			<h2>Latest writing</h2>
 			<a href="/essays">All essays →</a>
 		</div>
-		{essayEntries.length > 0 ? <ArchiveList entries={essayEntries} /> : <p class="muted">No essays yet.</p>}
+		{
+			latestEntries.length > 0 ? (
+				<ArchiveList entries={latestEntries} />
+			) : (
+				<p class="muted">No writing yet.</p>
+			)
+		}
 	</section>
 
 	<section class="container section">
 		<div class="section-head">
-			<h2>Latest notes</h2>
-			<a href="/notes">All notes →</a>
-		</div>
-		{noteEntries.length > 0 ? <ArchiveList entries={noteEntries} /> : <p class="muted">No notes yet.</p>}
-	</section>
-
-	<section class="container section">
-		<div class="section-head">
-			<h2>Active series</h2>
+			<h2>Series</h2>
 			<a href="/series">All series →</a>
 		</div>
 		<ul class="series-list">
