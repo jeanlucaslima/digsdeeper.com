@@ -45,6 +45,7 @@ body {
 
 main {
 	flex: 1;
+	padding-bottom: 3rem;
 }
 
 a {
@@ -195,6 +196,10 @@ hr {
 	font-size: 1.18rem;
 	line-height: 1.4;
 }
+.thesis p,
+.claim p {
+	margin: 0;
+}
 .thesis .label,
 .claim .label {
 	display: block;
@@ -311,6 +316,9 @@ hr {
 .article footer.trail a {
 	color: var(--ink);
 }
+.article footer.trail .trail-group {
+	margin-top: 1.25rem;
+}
 
 @media (max-width: 880px) {
 	.article {
@@ -411,9 +419,47 @@ hr {
 	margin: 0.75rem 0 0;
 }
 
+/* Meta row — quiet inline metadata like "Started X · Updated Y" */
+.meta-row {
+	font-family: var(--font-meta);
+	font-size: 0.78rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--muted);
+	margin: 1rem 0 2rem;
+}
+.meta-row span + span::before {
+	content: ' · ';
+}
+
+/* Reading path block — used on series pages */
+.reading-path {
+	margin: 2.5rem 0 0;
+}
+.reading-path .eyebrow {
+	display: block;
+	font-family: var(--font-meta);
+	font-size: 0.72rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--accent);
+	margin-bottom: 0.6rem;
+}
+.reading-path ol {
+	margin: 0;
+	padding-left: 1.25rem;
+	color: var(--ink);
+}
+.reading-path li {
+	margin-bottom: 0.3rem;
+}
+
 /* Homepage sections */
 .section {
 	margin: 4rem 0;
+}
+.section-head-spaced {
+	margin-top: 3rem;
 }
 .section-head {
 	display: flex;

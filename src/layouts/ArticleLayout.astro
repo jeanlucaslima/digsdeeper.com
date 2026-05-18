@@ -83,7 +83,7 @@ const meta = description ?? subtitle ?? thesis ?? claim ?? title;
 					{updated && <span> · Last updated: {formatDate(updated)}</span>}
 				</div>
 				{related.length > 0 && (
-					<div style="margin-top:1.25rem">
+					<div class="trail-group">
 						<span class="label">Continues</span>
 						<ul>
 							{related.map((r) => (
@@ -95,7 +95,7 @@ const meta = description ?? subtitle ?? thesis ?? claim ?? title;
 					</div>
 				)}
 				{series && (
-					<div style="margin-top:1.25rem">
+					<div class="trail-group">
 						<span class="label">Series</span>
 						<ul>
 							<li>
