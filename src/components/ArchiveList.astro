@@ -1,0 +1,40 @@
+---
+import { formatDate } from '../lib/format';
+
+interface Entry {
+	href: string;
+	title: string;
+	date: Date;
+	gloss?: string;
+	tags?: string[];
+}
+
+interface Props {
+	entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<ul class="archive">
+	{
+		entries.map((e) => (
+			<li>
+				<span class="date">{formatDate(e.date)}</span>
+				<div>
+					<div class="title">
+						<a href={e.href}>{e.title}</a>
+					</div>
+					{e.gloss && <p class="gloss">{e.gloss}</p>}
+					{e.tags && e.tags.length > 0 && (
+						<div class="tags">
+							{e.tags.map((t) => (
+								<span>{t}</span>
+							))}
+						</div>
+					)}
+				</div>
+			</li>
+		))
+	}
+</ul>

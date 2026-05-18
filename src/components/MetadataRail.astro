@@ -1,0 +1,50 @@
+---
+import { formatYearMonth } from '../lib/format';
+
+interface Item {
+	label: string;
+	value: string;
+	href?: string;
+}
+
+interface Props {
+	type: string;
+	status: string;
+	field?: string;
+	topics?: string[];
+	published?: Date;
+	updated?: Date;
+	series?: { slug: string; title: string };
+	extra?: Item[];
+}
+
+const { type, status, field, topics = [], published, updated, series, extra = [] } = Astro.props;
+
+const items: Item[] = [
+	{ label: 'Type', value: type },
+	{ label: 'Status', value: status },
+];
+
+if (field) items.push({ label: 'Field', value: field });
+else if (topics.length) items.push({ label: 'Topics', value: topics.join(', ') });
+
+if (published) items.push({ label: 'Published', value: formatYearMonth(published) });
+items.push({ label: 'Updated', value: updated ? formatYearMonth(updated) : '—' });
+
+if (series) items.push({ label: 'Series', value: series.title, href: `/series/${series.slug}` });
+
+for (const e of extra) items.push(e);
+---
+
+<aside class="meta rail" aria-label="Metadata">
+	<dl>
+		{
+			items.map((it) => (
+				<>
+					<dt>{it.label}</dt>
+					<dd>{it.href ? <a href={it.href}>{it.value}</a> : it.value}</dd>
+				</>
+			))
+		}
+	</dl>
+</aside>
