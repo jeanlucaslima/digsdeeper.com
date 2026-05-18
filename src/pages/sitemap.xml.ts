@@ -13,6 +13,7 @@ export const GET: APIRoute = async ({ site }) => {
 		{ loc: `${base}/notes` },
 		{ loc: `${base}/series` },
 		{ loc: `${base}/about` },
+		{ loc: `${base}/feed.xml` },
 		...essays.map((e) => ({ loc: `${base}/essays/${e.id}`, lastmod: e.data.updated ?? e.data.published })),
 		...notes.map((n) => ({ loc: `${base}/notes/${n.id}`, lastmod: n.data.updated ?? n.data.published })),
 		...series.map((s) => ({ loc: `${base}/series/${s.id}`, lastmod: s.data.updated ?? s.data.started })),

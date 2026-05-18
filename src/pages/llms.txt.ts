@@ -32,7 +32,7 @@ export const GET: APIRoute = async ({ site }) => {
 		...notes.slice(0, 10).map((n) => `- [${n.data.title}](${base}/notes/${n.id}): ${n.data.claim}`),
 		'',
 		'## Feeds',
-		`- [RSS](${base}/rss.xml)`,
+		`- [RSS](${base}/feed.xml)`,
 		`- [Sitemap](${base}/sitemap.xml)`,
 		'',
 	];
