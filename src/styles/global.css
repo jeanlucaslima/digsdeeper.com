@@ -37,6 +37,7 @@ html {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-rendering: optimizeLegibility;
+	scroll-padding-top: 5rem;
 }
 
 body {
@@ -131,11 +132,12 @@ hr {
 /* Site header */
 .site-header {
 	border-bottom: 1px solid var(--line);
-	padding: 1.25rem 0;
+	padding: 0.85rem 0;
 	font-family: var(--font-meta);
 	font-size: 0.82rem;
 	letter-spacing: 0.04em;
-	position: relative;
+	position: sticky;
+	top: 0;
 	z-index: 10;
 	background: var(--background);
 }
