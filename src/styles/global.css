@@ -429,7 +429,7 @@ html.menu-open {
 	display: grid;
 	grid-template-columns: var(--rail) minmax(0, 1fr);
 	gap: var(--gap);
-	padding: 3rem 0 2rem;
+	padding-block: 3rem 2rem;
 }
 .article .rail {
 	position: sticky;
@@ -677,7 +677,7 @@ html.menu-open {
 }
 
 .hero {
-	padding: 3rem 0 2rem;
+	padding-block: 3rem 2rem;
 	border-bottom: 1px solid var(--line);
 }
 .hero h1 {
