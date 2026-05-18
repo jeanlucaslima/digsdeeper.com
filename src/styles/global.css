@@ -9,6 +9,7 @@
 	--annotation: #9a6a20;
 	--signal: #a8842a;
 	--alert: #9c3b2e;
+	--notice: #efe5c4;
 
 	--font-sans: 'Google Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 	--font-display: var(--font-sans);
@@ -207,7 +208,7 @@ html.menu-open {
 .site-menu {
 	position: fixed;
 	inset: 0;
-	background: var(--surface);
+	background: var(--notice);
 	border-top: 4px solid var(--accent);
 	z-index: 20;
 	overflow-y: auto;
