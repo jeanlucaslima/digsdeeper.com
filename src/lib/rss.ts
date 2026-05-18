@@ -44,7 +44,7 @@ export async function buildRssResponse(site: URL | undefined, selfPath: string):
 <channel>
 <title>digsdeeper</title>
 <link>${base}</link>
-<description>A public research archive for durable arguments about software, strategy, AI, systems, and technology culture. Essays, notes, and long-running investigations by Jean Lucas Lima.</description>
+<description>Serious essays about software, strategy, AI, systems, and technology culture. Long-form arguments, working notes, and investigations by Jean Lucas Lima.</description>
 <language>en</language>
 <atom:link href="${base}${selfPath}" rel="self" type="application/rss+xml" />
 ${items

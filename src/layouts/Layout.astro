@@ -20,7 +20,7 @@ interface Props {
 
 const {
 	title,
-	description = 'A public research archive for durable arguments about software, strategy, AI, systems, and technology culture. Essays, notes, and long-running investigations by Jean Lucas Lima.',
+	description = 'Serious essays about software, strategy, AI, systems, and technology culture. Long-form arguments, working notes, and investigations by Jean Lucas Lima.',
 	canonical,
 	type = 'website',
 	published,
@@ -28,7 +28,7 @@ const {
 } = Astro.props;
 
 const siteName = 'digsdeeper';
-const fullTitle = title ? `${title} — ${siteName}` : `${siteName} — research archive`;
+const fullTitle = title ? `${title} — ${siteName}` : `${siteName} — serious essays`;
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? 'https://digsdeeper.com').toString();
 ---
 

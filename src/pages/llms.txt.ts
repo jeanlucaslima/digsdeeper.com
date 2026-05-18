@@ -16,7 +16,7 @@ export const GET: APIRoute = async ({ site }) => {
 	const lines: string[] = [
 		'# digsdeeper',
 		'',
-		'> A public research archive for durable arguments about software, strategy, AI, systems, and technology culture. Essays, notes, and long-running investigations by Jean Lucas Lima.',
+		'> Serious essays about software, strategy, AI, systems, and technology culture. Long-form arguments, working notes, and investigations by Jean Lucas Lima.',
 		'',
 		'## About',
 		`- [About](${base}/about): What digsdeeper is and how it fits alongside Jean's other surfaces.`,

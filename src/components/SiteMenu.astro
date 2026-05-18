@@ -8,17 +8,17 @@ interface Link {
 	match: RegExp;
 }
 
-const archive: Link[] = [
-	{ href: '/', label: 'Index', gloss: 'Front page of the archive', match: /^\/$/ },
-	{ href: '/essays', label: 'Essays', gloss: 'Polished long-form arguments', match: /^\/essays/ },
-	{ href: '/notes', label: 'Notes', gloss: 'Working observations and partial arguments', match: /^\/notes/ },
-	{ href: '/series', label: 'Series', gloss: 'Long-running investigations', match: /^\/series/ },
-	{ href: '/about', label: 'About', gloss: 'What digsdeeper is', match: /^\/about/ },
+const writing: Link[] = [
+	{ href: '/', label: 'Front page', gloss: 'Latest writing and current arguments', match: /^\/$/ },
+	{ href: '/essays', label: 'Essays', gloss: 'Long-form arguments', match: /^\/essays/ },
+	{ href: '/notes', label: 'Notes', gloss: 'Working thoughts and partial arguments', match: /^\/notes/ },
+	{ href: '/series', label: 'Series', gloss: 'Ongoing investigations', match: /^\/series/ },
+	{ href: '/about', label: 'About', gloss: 'What this site is', match: /^\/about/ },
 ];
 
-const machineReadable: Link[] = [
-	{ href: '/feed.xml', label: 'Feed', gloss: 'RSS for essays and notes', match: /^\/feed\.xml$/ },
-	{ href: '/llms.txt', label: 'Machine-readable map', gloss: 'llms.txt for search and AI', match: /^\/llms\.txt$/ },
+const subscribe: Link[] = [
+	{ href: '/feed.xml', label: 'RSS feed', gloss: 'Essays and notes as they are published', match: /^\/feed\.xml$/ },
+	{ href: '/llms.txt', label: 'llms.txt', gloss: 'Machine-readable map for search and AI', match: /^\/llms\.txt$/ },
 ];
 
 const elsewhere = [
@@ -41,16 +41,16 @@ function isCurrent(match: RegExp): boolean {
 >
 	<div class="container site-menu-inner">
 		<div class="site-menu-head">
-			<span class="eyebrow" id="site-menu-heading">Archive index</span>
+			<span class="eyebrow" id="site-menu-heading">Contents</span>
 			<button class="menu-trigger" type="button" data-menu-close aria-label="Close menu">CLOSE</button>
 		</div>
 
-		<nav class="site-menu-body" aria-label="Archive">
+		<nav class="site-menu-body" aria-label="Contents">
 			<section class="menu-group">
-				<h2 class="menu-group-label">Archive</h2>
+				<h2 class="menu-group-label">Writing</h2>
 				<ul>
 					{
-						archive.map((l) => (
+						writing.map((l) => (
 							<li>
 								<a
 									href={l.href}
@@ -68,10 +68,10 @@ function isCurrent(match: RegExp): boolean {
 			</section>
 
 			<section class="menu-group">
-				<h2 class="menu-group-label">Feeds</h2>
+				<h2 class="menu-group-label">Subscribe</h2>
 				<ul>
 					{
-						machineReadable.map((l) => (
+						subscribe.map((l) => (
 							<li>
 								<a
 									href={l.href}
