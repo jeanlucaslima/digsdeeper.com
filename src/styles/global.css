@@ -8,9 +8,10 @@
 	--accent-soft: #dce8e8;
 	--annotation: #9a6a20;
 
-	--font-display: 'Newsreader', 'Source Serif 4', Georgia, 'Times New Roman', serif;
-	--font-body: 'Source Serif 4', 'Newsreader', Georgia, 'Times New Roman', serif;
-	--font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+	--font-sans: 'Google Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--font-display: var(--font-sans);
+	--font-body: var(--font-sans);
+	--font-meta: var(--font-sans);
 
 	--measure: 64ch;
 	--rail: 16rem;
@@ -101,7 +102,7 @@ hr {
 }
 
 .mono {
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.78rem;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
@@ -127,7 +128,7 @@ hr {
 .site-header {
 	border-bottom: 1px solid var(--line);
 	padding: 1.25rem 0;
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.82rem;
 	letter-spacing: 0.04em;
 }
@@ -166,7 +167,7 @@ hr {
 	margin-top: 5rem;
 	padding: 2rem 0 3rem;
 	color: var(--muted);
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.78rem;
 	letter-spacing: 0.04em;
 }
@@ -197,7 +198,7 @@ hr {
 .thesis .label,
 .claim .label {
 	display: block;
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.7rem;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
@@ -207,7 +208,7 @@ hr {
 
 /* Metadata rail */
 .meta {
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.74rem;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
@@ -268,7 +269,7 @@ hr {
 	font-style: italic;
 }
 .article .prose code {
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.86em;
 	background: var(--surface);
 	padding: 0.08em 0.35em;
@@ -291,7 +292,7 @@ hr {
 	border-top: 1px solid var(--line);
 	max-width: var(--measure);
 	color: var(--muted);
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.78rem;
 	letter-spacing: 0.04em;
 }
@@ -341,7 +342,7 @@ hr {
 	align-items: baseline;
 }
 .archive .date {
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.78rem;
 	color: var(--muted);
 	letter-spacing: 0.04em;
@@ -368,7 +369,7 @@ hr {
 }
 .archive .tags {
 	margin-top: 0.5rem;
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.72rem;
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
@@ -393,7 +394,7 @@ hr {
 }
 .page-head .eyebrow {
 	display: block;
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.72rem;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
@@ -424,7 +425,7 @@ hr {
 	margin-bottom: 1rem;
 }
 .section-head h2 {
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.82rem;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
@@ -433,7 +434,7 @@ hr {
 	margin: 0;
 }
 .section-head a {
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.78rem;
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
@@ -469,7 +470,7 @@ hr {
 	border: 1px solid var(--line);
 }
 .featured .label {
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.72rem;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
@@ -524,7 +525,7 @@ hr {
 }
 .series-list .row2 {
 	margin-top: 0.5rem;
-	font-family: var(--font-mono);
+	font-family: var(--font-meta);
 	font-size: 0.72rem;
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
