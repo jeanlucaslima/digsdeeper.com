@@ -385,6 +385,31 @@ hr {
 	}
 }
 
+/* Page head — used as H1 on listing and utility pages */
+.page-head {
+	padding: 3rem 0 1.5rem;
+	border-bottom: 1px solid var(--line);
+	margin-bottom: 2rem;
+}
+.page-head .eyebrow {
+	display: block;
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted);
+	margin-bottom: 0.6rem;
+}
+.page-head h1 {
+	font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+	margin: 0;
+}
+.page-head .gloss {
+	color: var(--muted);
+	max-width: var(--measure);
+	margin: 0.75rem 0 0;
+}
+
 /* Homepage sections */
 .section {
 	margin: 4rem 0;

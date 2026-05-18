@@ -17,12 +17,12 @@ const entries = essays.map((e) => ({
 ---
 
 <Layout title="Essays" description="Long-form arguments and durable essays by Jean Lucas Lima.">
-	<section class="container section">
-		<div class="section-head">
-			<h2>Essays</h2>
-			<a href="/rss.xml">RSS</a>
-		</div>
-		<p class="muted measure" style="margin-top:0">Polished long-form arguments. Each essay has a thesis and is meant to age well.</p>
+	<section class="container">
+		<header class="page-head">
+			<span class="eyebrow">Archive · Essays</span>
+			<h1>Essays</h1>
+			<p class="gloss">Polished long-form arguments. Each essay has a thesis and is meant to age well.</p>
+		</header>
 		{entries.length > 0 ? <ArchiveList entries={entries} /> : <p class="muted">No essays yet.</p>}
 	</section>
 </Layout>

@@ -17,12 +17,12 @@ const entries = notes.map((n) => ({
 ---
 
 <Layout title="Notes" description="Working observations and shorter research notes by Jean Lucas Lima.">
-	<section class="container section">
-		<div class="section-head">
-			<h2>Notes</h2>
-			<a href="/rss.xml">RSS</a>
-		</div>
-		<p class="muted measure" style="margin-top:0">Shorter observations and partial arguments. Each note carries a claim or question, even when it isn't yet an essay.</p>
+	<section class="container">
+		<header class="page-head">
+			<span class="eyebrow">Archive · Notes</span>
+			<h1>Notes</h1>
+			<p class="gloss">Shorter observations and partial arguments. Each note carries a claim or question, even when it isn't yet an essay.</p>
+		</header>
 		{entries.length > 0 ? <ArchiveList entries={entries} /> : <p class="muted">No notes yet.</p>}
 	</section>
 </Layout>
