@@ -145,10 +145,15 @@ hr {
 }
 .site-header .brand {
 	display: inline-flex;
-	align-items: baseline;
+	align-items: center;
 	gap: 0.6rem;
 	color: var(--ink);
 	text-decoration: none;
+}
+.brand-mark {
+	color: var(--accent);
+	transform: translateY(-1px);
+	flex-shrink: 0;
 }
 .site-header .brand-name {
 	font-family: var(--font-display);
@@ -227,6 +232,14 @@ html.menu-open {
 	font-size: 0.72rem;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
+	color: var(--accent);
+}
+.site-menu-mark {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+}
+.site-menu-shovel {
 	color: var(--accent);
 }
 .site-menu-body {
