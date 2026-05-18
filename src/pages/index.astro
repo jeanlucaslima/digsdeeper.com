@@ -1,11 +1,88 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import ArchiveList from '../components/ArchiveList.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const essays = (await getCollection('essays', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.published.getTime() - a.data.published.getTime(),
+);
+const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.published.getTime() - a.data.published.getTime(),
+);
+const allSeries = (await getCollection('series')).sort(
+	(a, b) => b.data.started.getTime() - a.data.started.getTime(),
+);
+
+const featured = allSeries.find((s) => s.id === 'the-great-arch-of-digitalization') ?? allSeries[0];
+
+const essayEntries = essays.slice(0, 5).map((e) => ({
+	href: `/essays/${e.id}`,
+	title: e.data.title,
+	date: e.data.published,
+	gloss: e.data.thesis,
+	tags: ['Essay', e.data.field ?? e.data.topics[0]].filter(Boolean) as string[],
+}));
+
+const noteEntries = notes.slice(0, 5).map((n) => ({
+	href: `/notes/${n.id}`,
+	title: n.data.title,
+	date: n.data.published,
+	gloss: n.data.claim,
+	tags: ['Note', n.data.field ?? n.data.topics[0]].filter(Boolean) as string[],
+}));
 ---
 
 <Layout>
-	<Welcome />
+	<section class="container hero">
+		<h1>A research archive for durable arguments about software, strategy, AI, systems, and technology culture.</h1>
+		<p>Essays, notes, and long-running investigations by <a href="https://jeanlucas.me">Jean Lucas Lima</a>. A place for ideas that need more room than a post, but less ceremony than a book.</p>
+
+		{
+			featured && (
+				<aside class="featured" aria-label="Featured investigation">
+					<span class="label">Featured investigation</span>
+					<p class="question">
+						<a href={`/series/${featured.id}`}>{featured.data.title}</a>
+					</p>
+					<p class="gloss">{featured.data.central_question}</p>
+				</aside>
+			)
+		}
+	</section>
+
+	<section class="container section">
+		<div class="section-head">
+			<h2>Latest essays</h2>
+			<a href="/essays">All essays →</a>
+		</div>
+		{essayEntries.length > 0 ? <ArchiveList entries={essayEntries} /> : <p class="muted">No essays yet.</p>}
+	</section>
+
+	<section class="container section">
+		<div class="section-head">
+			<h2>Latest notes</h2>
+			<a href="/notes">All notes →</a>
+		</div>
+		{noteEntries.length > 0 ? <ArchiveList entries={noteEntries} /> : <p class="muted">No notes yet.</p>}
+	</section>
+
+	<section class="container section">
+		<div class="section-head">
+			<h2>Active series</h2>
+			<a href="/series">All series →</a>
+		</div>
+		<ul class="series-list">
+			{
+				allSeries.map((s) => (
+					<li>
+						<p class="name">
+							<a href={`/series/${s.id}`}>{s.data.title}</a>
+						</p>
+						<p class="q">{s.data.central_question}</p>
+						<div class="row2">{s.data.status}</div>
+					</li>
+				))
+			}
+		</ul>
+	</section>
 </Layout>

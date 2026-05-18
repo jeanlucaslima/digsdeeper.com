@@ -1,0 +1,25 @@
+---
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const links: { href: string; label: string; match: RegExp }[] = [
+	{ href: '/essays', label: 'Essays', match: /^\/essays/ },
+	{ href: '/notes', label: 'Notes', match: /^\/notes/ },
+	{ href: '/series', label: 'Series', match: /^\/series/ },
+	{ href: '/about', label: 'About', match: /^\/about/ },
+];
+---
+
+<header class="site-header">
+	<div class="container row">
+		<a class="brand" href="/">digsdeeper</a>
+		<nav aria-label="Primary">
+			{
+				links.map((l) => (
+					<a href={l.href} aria-current={l.match.test(pathname) ? 'page' : undefined}>
+						{l.label}
+					</a>
+				))
+			}
+			<a href="/rss.xml">RSS</a>
+		</nav>
+	</div>
+</header>
