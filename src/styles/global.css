@@ -132,6 +132,9 @@ hr {
 	font-family: var(--font-meta);
 	font-size: 0.82rem;
 	letter-spacing: 0.04em;
+	position: relative;
+	z-index: 10;
+	background: var(--background);
 }
 .site-header .row {
 	display: flex;
@@ -141,25 +144,184 @@ hr {
 	flex-wrap: wrap;
 }
 .site-header .brand {
-	font-family: var(--font-display);
-	font-size: 1.15rem;
-	letter-spacing: -0.01em;
-	text-transform: none;
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.6rem;
 	color: var(--ink);
 	text-decoration: none;
 }
-.site-header nav {
-	display: flex;
-	gap: 1.25rem;
+.site-header .brand-name {
+	font-family: var(--font-display);
+	font-size: 1.15rem;
+	font-weight: 500;
+	letter-spacing: -0.01em;
+	text-transform: none;
 }
-.site-header nav a {
-	color: var(--muted);
-	text-decoration: none;
+.site-header .brand-descriptor {
+	font-family: var(--font-meta);
+	font-size: 0.72rem;
 	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--muted);
 }
-.site-header nav a:hover,
-.site-header nav a[aria-current='page'] {
+.site-header .brand:hover .brand-name {
 	color: var(--accent);
+}
+
+/* Menu trigger (text-based, not a hamburger) */
+.menu-trigger {
+	appearance: none;
+	background: transparent;
+	border: 1px solid var(--line);
+	color: var(--ink);
+	font-family: var(--font-meta);
+	font-size: 0.72rem;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.18em;
+	padding: 0.45rem 0.85rem;
+	cursor: pointer;
+	border-radius: 0;
+	transition: border-color 120ms ease, color 120ms ease;
+}
+.menu-trigger:hover,
+.menu-trigger:focus-visible {
+	border-color: var(--accent);
+	color: var(--accent);
+	outline: none;
+}
+.menu-trigger:focus-visible {
+	box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Full-screen menu */
+html.menu-open {
+	overflow: hidden;
+}
+.site-menu {
+	position: fixed;
+	inset: 0;
+	background: var(--background);
+	z-index: 20;
+	overflow-y: auto;
+	animation: site-menu-in 180ms ease-out;
+}
+.site-menu[hidden] {
+	display: none;
+}
+.site-menu-inner {
+	padding-top: 1.25rem;
+	padding-bottom: 4rem;
+}
+.site-menu-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-bottom: 1.25rem;
+	border-bottom: 1px solid var(--line);
+	margin-bottom: 2.5rem;
+}
+.site-menu-head .eyebrow {
+	font-family: var(--font-meta);
+	font-size: 0.72rem;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+.site-menu-body {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 2.5rem;
+}
+.menu-group-label {
+	font-family: var(--font-meta);
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted);
+	margin: 0 0 1rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 1px solid var(--line);
+}
+.site-menu-body ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.site-menu-body li {
+	margin-bottom: 1rem;
+}
+.site-menu-body a {
+	display: block;
+	text-decoration: none;
+	color: var(--ink);
+	padding: 0.25rem 0;
+	border-left: 2px solid transparent;
+	padding-left: 0.75rem;
+	margin-left: -0.75rem;
+	transition: border-color 120ms ease, color 120ms ease;
+}
+.site-menu-body a:hover,
+.site-menu-body a:focus-visible {
+	border-left-color: var(--accent);
+	color: var(--accent);
+	outline: none;
+}
+.site-menu-body a[aria-current='page'] {
+	border-left-color: var(--accent);
+}
+.menu-link-label {
+	display: block;
+	font-family: var(--font-display);
+	font-size: 1.25rem;
+	line-height: 1.25;
+	letter-spacing: -0.01em;
+}
+.menu-link-gloss {
+	display: block;
+	color: var(--muted);
+	font-size: 0.92rem;
+	margin-top: 0.15rem;
+}
+.menu-current {
+	display: inline-block;
+	margin-top: 0.35rem;
+	font-family: var(--font-meta);
+	font-size: 0.68rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+
+@keyframes site-menu-in {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.site-menu {
+		animation: none;
+	}
+}
+
+@media (max-width: 720px) {
+	.site-header .brand-descriptor {
+		display: none;
+	}
+	.site-menu-body {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+	.site-menu-inner {
+		padding-bottom: 3rem;
+	}
 }
 
 /* Site footer */

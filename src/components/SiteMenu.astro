@@ -1,0 +1,164 @@
+---
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+interface Link {
+	href: string;
+	label: string;
+	gloss?: string;
+	match: RegExp;
+}
+
+const archive: Link[] = [
+	{ href: '/', label: 'Index', gloss: 'Front page of the archive', match: /^\/$/ },
+	{ href: '/essays', label: 'Essays', gloss: 'Polished long-form arguments', match: /^\/essays/ },
+	{ href: '/notes', label: 'Notes', gloss: 'Working observations and partial arguments', match: /^\/notes/ },
+	{ href: '/series', label: 'Series', gloss: 'Long-running investigations', match: /^\/series/ },
+	{ href: '/about', label: 'About', gloss: 'What digsdeeper is', match: /^\/about/ },
+];
+
+const machineReadable: Link[] = [
+	{ href: '/feed.xml', label: 'Feed', gloss: 'RSS for essays and notes', match: /^\/feed\.xml$/ },
+	{ href: '/llms.txt', label: 'Machine-readable map', gloss: 'llms.txt for search and AI', match: /^\/llms\.txt$/ },
+];
+
+const elsewhere = [
+	{ href: 'https://jeanlucas.me', label: 'jeanlucas.me', gloss: 'Canonical identity' },
+	{ href: 'https://aleattorium.com', label: 'aleattorium.com', gloss: 'Studio for useful oddities' },
+	{ href: 'https://l8p.tech', label: 'L8P', gloss: 'Tech media and events' },
+];
+
+function isCurrent(match: RegExp): boolean {
+	return match.test(pathname);
+}
+---
+
+<div
+	id="site-menu"
+	class="site-menu"
+	hidden
+	aria-hidden="true"
+	aria-labelledby="site-menu-heading"
+>
+	<div class="container site-menu-inner">
+		<div class="site-menu-head">
+			<span class="eyebrow" id="site-menu-heading">Archive index</span>
+			<button class="menu-trigger" type="button" data-menu-close aria-label="Close menu">CLOSE</button>
+		</div>
+
+		<nav class="site-menu-body" aria-label="Archive">
+			<section class="menu-group">
+				<h2 class="menu-group-label">Archive</h2>
+				<ul>
+					{
+						archive.map((l) => (
+							<li>
+								<a
+									href={l.href}
+									data-menu-link
+									aria-current={isCurrent(l.match) ? 'page' : undefined}
+								>
+									<span class="menu-link-label">{l.label}</span>
+									{l.gloss && <span class="menu-link-gloss">{l.gloss}</span>}
+									{isCurrent(l.match) && <span class="menu-current">Current</span>}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<section class="menu-group">
+				<h2 class="menu-group-label">Feeds</h2>
+				<ul>
+					{
+						machineReadable.map((l) => (
+							<li>
+								<a
+									href={l.href}
+									data-menu-link
+									aria-current={isCurrent(l.match) ? 'page' : undefined}
+								>
+									<span class="menu-link-label">{l.label}</span>
+									{l.gloss && <span class="menu-link-gloss">{l.gloss}</span>}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<section class="menu-group">
+				<h2 class="menu-group-label">Elsewhere</h2>
+				<ul>
+					{
+						elsewhere.map((l) => (
+							<li>
+								<a href={l.href} rel="me noopener" data-menu-link>
+									<span class="menu-link-label">{l.label}</span>
+									{l.gloss && <span class="menu-link-gloss">{l.gloss}</span>}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</nav>
+	</div>
+</div>
+
+<script>
+	const menu = document.getElementById('site-menu');
+	const triggers = document.querySelectorAll<HTMLButtonElement>('[data-menu-trigger]');
+	const closers = document.querySelectorAll<HTMLButtonElement>('[data-menu-close]');
+	let lastFocus: HTMLElement | null = null;
+
+	function openMenu() {
+		if (!menu) return;
+		lastFocus = document.activeElement as HTMLElement | null;
+		menu.hidden = false;
+		menu.setAttribute('aria-hidden', 'false');
+		document.documentElement.classList.add('menu-open');
+		document.body.style.overflow = 'hidden';
+		triggers.forEach((t) => {
+			t.setAttribute('aria-expanded', 'true');
+			t.textContent = 'CLOSE';
+		});
+		const firstLink = menu.querySelector<HTMLAnchorElement>('a[data-menu-link]');
+		firstLink?.focus();
+	}
+
+	function closeMenu() {
+		if (!menu) return;
+		menu.hidden = true;
+		menu.setAttribute('aria-hidden', 'true');
+		document.documentElement.classList.remove('menu-open');
+		document.body.style.overflow = '';
+		triggers.forEach((t) => {
+			t.setAttribute('aria-expanded', 'false');
+			t.textContent = 'MENU';
+		});
+		lastFocus?.focus();
+	}
+
+	function toggle() {
+		if (!menu) return;
+		if (menu.hidden) openMenu();
+		else closeMenu();
+	}
+
+	triggers.forEach((t) => t.addEventListener('click', toggle));
+	closers.forEach((c) => c.addEventListener('click', closeMenu));
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && menu && !menu.hidden) {
+			e.preventDefault();
+			closeMenu();
+		}
+	});
+
+	menu?.querySelectorAll<HTMLAnchorElement>('a[data-menu-link]').forEach((a) => {
+		a.addEventListener('click', () => {
+			closeMenu();
+		});
+	});
+</script>

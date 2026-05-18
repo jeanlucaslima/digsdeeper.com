@@ -1,25 +1,21 @@
 ---
-const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
-const links: { href: string; label: string; match: RegExp }[] = [
-	{ href: '/essays', label: 'Essays', match: /^\/essays/ },
-	{ href: '/notes', label: 'Notes', match: /^\/notes/ },
-	{ href: '/series', label: 'Series', match: /^\/series/ },
-	{ href: '/about', label: 'About', match: /^\/about/ },
-];
+import SiteMenu from './SiteMenu.astro';
 ---
 
 <header class="site-header">
 	<div class="container row">
-		<a class="brand" href="/">digsdeeper</a>
-		<nav aria-label="Primary">
-			{
-				links.map((l) => (
-					<a href={l.href} aria-current={l.match.test(pathname) ? 'page' : undefined}>
-						{l.label}
-					</a>
-				))
-			}
-			<a href="/feed.xml">RSS</a>
-		</nav>
+		<a class="brand" href="/">
+			<span class="brand-name">digsdeeper</span>
+			<span class="brand-descriptor">Research archive</span>
+		</a>
+		<button
+			type="button"
+			class="menu-trigger"
+			data-menu-trigger
+			aria-controls="site-menu"
+			aria-expanded="false"
+		>MENU</button>
 	</div>
 </header>
+
+<SiteMenu />
