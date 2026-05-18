@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ArchiveList from '../../components/ArchiveList.astro';
+
+const essays = (await getCollection('essays', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.published.getTime() - a.data.published.getTime(),
+);
+
+const entries = essays.map((e) => ({
+	href: `/essays/${e.id}`,
+	title: e.data.title,
+	date: e.data.published,
+	gloss: e.data.thesis,
+	tags: ['Essay', e.data.status, e.data.field ?? e.data.topics[0]].filter(Boolean) as string[],
+}));
+---
+
+<Layout title="Essays" description="Long-form arguments and durable essays by Jean Lucas Lima.">
+	<section class="container section">
+		<div class="section-head">
+			<h2>Essays</h2>
+			<a href="/rss.xml">RSS</a>
+		</div>
+		<p class="muted measure" style="margin-top:0">Polished long-form arguments. Each essay has a thesis and is meant to age well.</p>
+		{entries.length > 0 ? <ArchiveList entries={entries} /> : <p class="muted">No essays yet.</p>}
+	</section>
+</Layout>

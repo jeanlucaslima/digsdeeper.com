@@ -1,0 +1,48 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+	const essays = await getCollection('essays', ({ data }) => !data.draft);
+	return essays.map((e) => ({ params: { slug: e.id }, props: { entry: e } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const allEssays = await getCollection('essays');
+const allNotes = await getCollection('notes');
+const allSeries = await getCollection('series');
+
+const series = entry.data.series
+	? allSeries.find((s) => s.id === entry.data.series)
+	: undefined;
+
+const related = entry.data.related
+	.map((slug) => {
+		const e = allEssays.find((x) => x.id === slug);
+		if (e) return { href: `/essays/${e.id}`, title: e.data.title };
+		const n = allNotes.find((x) => x.id === slug);
+		if (n) return { href: `/notes/${n.id}`, title: n.data.title };
+		return null;
+	})
+	.filter((x): x is { href: string; title: string } => x !== null);
+---
+
+<ArticleLayout
+	title={entry.data.title}
+	subtitle={entry.data.summary}
+	type="Essay"
+	status={entry.data.status}
+	field={entry.data.field}
+	topics={entry.data.topics}
+	published={entry.data.published}
+	updated={entry.data.updated}
+	thesis={entry.data.thesis}
+	series={series ? { slug: series.id, title: series.data.title } : undefined}
+	related={related}
+	canonical={entry.data.canonical}
+	description={entry.data.summary ?? entry.data.thesis}
+>
+	<Content />
+</ArticleLayout>

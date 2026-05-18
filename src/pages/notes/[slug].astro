@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+	const notes = await getCollection('notes', ({ data }) => !data.draft);
+	return notes.map((n) => ({ params: { slug: n.id }, props: { entry: n } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const allEssays = await getCollection('essays');
+const allNotes = await getCollection('notes');
+
+const related = entry.data.related
+	.map((slug) => {
+		const e = allEssays.find((x) => x.id === slug);
+		if (e) return { href: `/essays/${e.id}`, title: e.data.title };
+		const n = allNotes.find((x) => x.id === slug);
+		if (n) return { href: `/notes/${n.id}`, title: n.data.title };
+		return null;
+	})
+	.filter((x): x is { href: string; title: string } => x !== null);
+---
+
+<ArticleLayout
+	title={entry.data.title}
+	subtitle={entry.data.summary}
+	type="Note"
+	status={entry.data.status}
+	field={entry.data.field}
+	topics={entry.data.topics}
+	published={entry.data.published}
+	updated={entry.data.updated}
+	claim={entry.data.claim}
+	related={related}
+	description={entry.data.summary ?? entry.data.claim}
+>
+	<Content />
+</ArticleLayout>

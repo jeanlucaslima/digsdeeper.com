@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const allSeries = (await getCollection('series')).sort(
+	(a, b) => b.data.started.getTime() - a.data.started.getTime(),
+);
+---
+
+<Layout title="Series" description="Long-running investigations.">
+	<section class="container section">
+		<div class="section-head">
+			<h2>Series</h2>
+		</div>
+		<p class="muted measure" style="margin-top:0">Long-running investigations. Each series carries a central question and gathers essays and notes that develop a sustained argument over time.</p>
+		<ul class="series-list">
+			{
+				allSeries.map((s) => (
+					<li>
+						<p class="name">
+							<a href={`/series/${s.id}`}>{s.data.title}</a>
+						</p>
+						<p class="q">{s.data.central_question}</p>
+						<div class="row2">{s.data.status}</div>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</Layout>

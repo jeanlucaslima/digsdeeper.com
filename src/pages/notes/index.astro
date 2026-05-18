@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ArchiveList from '../../components/ArchiveList.astro';
+
+const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.published.getTime() - a.data.published.getTime(),
+);
+
+const entries = notes.map((n) => ({
+	href: `/notes/${n.id}`,
+	title: n.data.title,
+	date: n.data.published,
+	gloss: n.data.claim,
+	tags: ['Note', n.data.status, n.data.field ?? n.data.topics[0]].filter(Boolean) as string[],
+}));
+---
+
+<Layout title="Notes" description="Working observations and shorter research notes by Jean Lucas Lima.">
+	<section class="container section">
+		<div class="section-head">
+			<h2>Notes</h2>
+			<a href="/rss.xml">RSS</a>
+		</div>
+		<p class="muted measure" style="margin-top:0">Shorter observations and partial arguments. Each note carries a claim or question, even when it isn't yet an essay.</p>
+		{entries.length > 0 ? <ArchiveList entries={entries} /> : <p class="muted">No notes yet.</p>}
+	</section>
+</Layout>
