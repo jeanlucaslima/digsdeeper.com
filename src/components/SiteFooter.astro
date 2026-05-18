@@ -3,13 +3,25 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-	<div class="container row">
-		<span>© {year} Jean Lucas Lima · digsdeeper</span>
-		<span>
-			<a href="https://jeanlucas.me">jeanlucas.me</a> ·
-			<a href="https://aleattorium.com">aleattorium.com</a> ·
-			<a href="/feed.xml">RSS</a> ·
-			<a href="/llms.txt">llms.txt</a>
-		</span>
+	<div class="container site-footer-grid">
+		<section class="site-footer-col">
+			<h2 class="site-footer-label">digsdeeper</h2>
+			<p class="site-footer-line">© {year} Jean Lucas Lima</p>
+			<p class="site-footer-line"><a href="/about">About this archive</a></p>
+		</section>
+
+		<section class="site-footer-col">
+			<h2 class="site-footer-label">Machine-readable</h2>
+			<p class="site-footer-line"><a href="/feed.xml">RSS feed</a></p>
+			<p class="site-footer-line"><a href="/llms.txt">llms.txt</a></p>
+			<p class="site-footer-line"><a href="/sitemap.xml">Sitemap</a></p>
+		</section>
+
+		<section class="site-footer-col">
+			<h2 class="site-footer-label">Elsewhere</h2>
+			<p class="site-footer-line"><a href="https://jeanlucas.me">jeanlucas.me</a></p>
+			<p class="site-footer-line"><a href="https://aleattorium.com">aleattorium.com</a></p>
+			<p class="site-footer-line"><a href="https://l8p.tech">L8P</a></p>
+		</section>
 	</div>
 </footer>
