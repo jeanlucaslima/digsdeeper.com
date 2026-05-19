@@ -38,6 +38,8 @@ function isCurrent(match: RegExp): boolean {
 	id="site-menu"
 	class="site-menu"
 	data-open="false"
+	role="dialog"
+	aria-modal="true"
 	aria-hidden="true"
 	aria-labelledby="site-menu-heading"
 	inert
@@ -118,6 +120,14 @@ function isCurrent(match: RegExp): boolean {
 	const closers = document.querySelectorAll<HTMLButtonElement>('[data-menu-close]');
 	let lastFocus: HTMLElement | null = null;
 
+	function backgroundSiblings(): HTMLElement[] {
+		if (!menu) return [];
+		return Array.from(document.body.children).filter(
+			(c): c is HTMLElement =>
+				c instanceof HTMLElement && c !== menu && c.tagName !== 'SCRIPT',
+		);
+	}
+
 	function isOpen() {
 		return menu?.getAttribute('data-open') === 'true';
 	}
@@ -128,14 +138,16 @@ function isCurrent(match: RegExp): boolean {
 		menu.setAttribute('data-open', 'true');
 		menu.setAttribute('aria-hidden', 'false');
 		menu.removeAttribute('inert');
+		backgroundSiblings().forEach((n) => n.setAttribute('inert', ''));
 		document.documentElement.classList.add('menu-open');
 		document.body.style.overflow = 'hidden';
 		triggers.forEach((t) => {
 			t.setAttribute('aria-expanded', 'true');
 			t.textContent = 'CLOSE';
 		});
-		const firstLink = menu.querySelector<HTMLAnchorElement>('a[data-menu-link]');
-		firstLink?.focus();
+		// Move focus to the in-dialog close button so Escape/Enter is immediate.
+		const closer = menu.querySelector<HTMLButtonElement>('[data-menu-close]');
+		closer?.focus();
 	}
 
 	function closeMenu() {
@@ -143,13 +155,20 @@ function isCurrent(match: RegExp): boolean {
 		menu.setAttribute('data-open', 'false');
 		menu.setAttribute('aria-hidden', 'true');
 		menu.setAttribute('inert', '');
+		backgroundSiblings().forEach((n) => n.removeAttribute('inert'));
 		document.documentElement.classList.remove('menu-open');
 		document.body.style.overflow = '';
 		triggers.forEach((t) => {
 			t.setAttribute('aria-expanded', 'false');
 			t.textContent = 'MENU';
 		});
-		lastFocus?.focus();
+		// Restore focus to whatever opened the menu, falling back to the header trigger.
+		const target =
+			lastFocus && document.body.contains(lastFocus)
+				? lastFocus
+				: (triggers[0] as HTMLElement | undefined);
+		target?.focus();
+		lastFocus = null;
 	}
 
 	function toggle() {
@@ -162,9 +181,26 @@ function isCurrent(match: RegExp): boolean {
 	closers.forEach((c) => c.addEventListener('click', closeMenu));
 
 	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape' && isOpen()) {
+		if (!isOpen() || !menu) return;
+		if (e.key === 'Escape') {
 			e.preventDefault();
 			closeMenu();
+			return;
+		}
+		if (e.key === 'Tab') {
+			const focusables = menu.querySelectorAll<HTMLElement>(
+				'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+			);
+			if (focusables.length === 0) return;
+			const first = focusables[0];
+			const last = focusables[focusables.length - 1];
+			if (e.shiftKey && document.activeElement === first) {
+				e.preventDefault();
+				last.focus();
+			} else if (!e.shiftKey && document.activeElement === last) {
+				e.preventDefault();
+				first.focus();
+			}
 		}
 	});
 

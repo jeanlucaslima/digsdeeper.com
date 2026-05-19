@@ -2,7 +2,7 @@
 	--background: #f7f3ea;
 	--surface: #efe8dc;
 	--ink: #171411;
-	--muted: #70685f;
+	--muted: #5f574e;
 	--line: #d6cdbf;
 	--accent: #1f4e5f;
 	--accent-soft: #dce8e8;
@@ -127,6 +127,47 @@ hr {
 
 .muted {
 	color: var(--muted);
+}
+
+/* Skip link — visible only when focused */
+.skip-link {
+	position: absolute;
+	left: 0.75rem;
+	top: 0.75rem;
+	z-index: 1000;
+	padding: 0.6rem 0.9rem;
+	background: var(--ink);
+	color: var(--background);
+	font-family: var(--font-meta);
+	font-size: 0.85rem;
+	letter-spacing: 0.06em;
+	text-decoration: none;
+	transform: translateY(-200%);
+	transition: transform 120ms ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+	transform: translateY(0);
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+/* Reset default focus outline to a more visible one */
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+main:focus { outline: none; }
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }
 
 /* Site header */
@@ -384,12 +425,13 @@ html.menu-open {
 }
 .site-footer a {
 	color: var(--ink);
-	text-decoration: none;
-	border-bottom: 1px solid transparent;
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
 }
 .site-footer a:hover {
 	color: var(--accent);
-	border-bottom-color: currentColor;
+	text-decoration-thickness: 2px;
 }
 @media (max-width: 720px) {
 	.site-footer-grid {
