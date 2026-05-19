@@ -96,6 +96,14 @@ const ogImageURL = new URL(resolveOgImagePath(), siteOrigin).toString();
 				<script type="application/ld+json" set:html={JSON.stringify(block)} />
 			))
 		}
+		<script>
+			import { init } from '@plausible-analytics/tracker';
+			init({
+				domain: 'www.digsdeeper.com',
+				outboundLinks: true,
+				fileDownloads: true,
+			});
+		</script>
 	</head>
 	<body>
 		<a href="#main" class="skip-link">Skip to content</a>
