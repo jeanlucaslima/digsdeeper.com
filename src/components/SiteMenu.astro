@@ -132,9 +132,20 @@ function isCurrent(match: RegExp): boolean {
 		return menu?.getAttribute('data-open') === 'true';
 	}
 
-	function openMenu() {
+	function openMenu(opener?: HTMLElement) {
 		if (!menu) return;
-		lastFocus = document.activeElement as HTMLElement | null;
+		// Prefer the explicit opener (the trigger that fired the event), then the
+		// currently focused element, then the first trigger. document.body /
+		// detached nodes are skipped so Escape always restores focus to something
+		// meaningful even when the menu was opened by mouse on macOS Chrome (where
+		// clicking a <button> doesn't move keyboard focus to it).
+		const active = document.activeElement as HTMLElement | null;
+		const candidate =
+			opener ??
+			(active && active !== document.body && document.body.contains(active) ? active : null) ??
+			(triggers[0] as HTMLElement | undefined) ??
+			null;
+		lastFocus = candidate;
 		menu.setAttribute('data-open', 'true');
 		menu.setAttribute('aria-hidden', 'false');
 		menu.removeAttribute('inert');
@@ -171,10 +182,10 @@ function isCurrent(match: RegExp): boolean {
 		lastFocus = null;
 	}
 
-	function toggle() {
+	function toggle(this: HTMLElement) {
 		if (!menu) return;
 		if (isOpen()) closeMenu();
-		else openMenu();
+		else openMenu(this);
 	}
 
 	triggers.forEach((t) => t.addEventListener('click', toggle));
