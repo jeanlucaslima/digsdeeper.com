@@ -8,6 +8,7 @@
 	--accent-soft: #dce8e8;
 	--annotation: #9a6a20;
 	--signal: #a8842a;
+	--signal-text: #7a5f15;
 	--alert: #9c3b2e;
 	--notice: #efe5c4;
 
@@ -461,7 +462,7 @@ html.menu-open {
 	font-size: 0.7rem;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
-	color: var(--signal);
+	color: var(--signal-text);
 	margin-bottom: 0.3rem;
 }
 
