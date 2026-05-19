@@ -5,6 +5,7 @@ interface Item {
 	label: string;
 	value: string;
 	href?: string;
+	datetime?: string;
 }
 
 interface Props {
@@ -28,8 +29,13 @@ const items: Item[] = [
 if (field) items.push({ label: 'Field', value: field });
 else if (topics.length) items.push({ label: 'Topics', value: topics.join(', ') });
 
-if (published) items.push({ label: 'Published', value: formatYearMonth(published) });
-items.push({ label: 'Updated', value: updated ? formatYearMonth(updated) : '—' });
+if (published)
+	items.push({ label: 'Published', value: formatYearMonth(published), datetime: published.toISOString() });
+items.push({
+	label: 'Updated',
+	value: updated ? formatYearMonth(updated) : '—',
+	datetime: updated ? updated.toISOString() : undefined,
+});
 
 if (series) items.push({ label: 'Series', value: series.title, href: `/series/${series.slug}` });
 
@@ -42,7 +48,15 @@ for (const e of extra) items.push(e);
 			items.map((it) => (
 				<>
 					<dt>{it.label}</dt>
-					<dd>{it.href ? <a href={it.href}>{it.value}</a> : it.value}</dd>
+					<dd>
+						{it.href ? (
+							<a href={it.href}>{it.value}</a>
+						) : it.datetime ? (
+							<time datetime={it.datetime}>{it.value}</time>
+						) : (
+							it.value
+						)}
+					</dd>
 				</>
 			))
 		}

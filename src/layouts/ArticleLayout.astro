@@ -108,8 +108,8 @@ const jsonLd = {
 
 			<footer class="trail">
 				<div>
-					<span>First published: {formatDate(published)}</span>
-					{updated && <span> · Last updated: {formatDate(updated)}</span>}
+					<span>First published: <time datetime={published.toISOString()}>{formatDate(published)}</time></span>
+					{updated && <span> · Last updated: <time datetime={updated.toISOString()}>{formatDate(updated)}</time></span>}
 				</div>
 				{related.length > 0 && (
 					<div class="trail-group">
