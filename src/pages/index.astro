@@ -57,9 +57,38 @@ const latestEntries = combined.map((c) => ({
 	gloss: c.gloss,
 	tags: [c.type, c.field].filter(Boolean) as string[],
 }));
+
+const SITE_URL = 'https://digsdeeper.com';
+const SITE_DESCRIPTION =
+	'Serious essays about software, strategy, AI, systems, and technology culture. Long-form arguments, working notes, and investigations by Jean Lucas Lima.';
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		'@id': `${SITE_URL}/#website`,
+		url: SITE_URL,
+		name: 'digsdeeper',
+		description: SITE_DESCRIPTION,
+		inLanguage: 'en',
+		publisher: { '@id': `${SITE_URL}/#person` },
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Person',
+		'@id': `${SITE_URL}/#person`,
+		name: 'Jean Lucas Lima',
+		url: 'https://jeanlucas.me',
+		sameAs: [
+			'https://github.com/jeanlucaslima',
+			'https://aleattorium.com',
+			'https://l8p.tech',
+		],
+	},
+];
 ---
 
-<Layout>
+<Layout jsonLd={jsonLd}>
 	<section class="container hero hero-compact">
 		<h1 class="hero-tagline">Serious essays about software, strategy, AI, systems, and technology culture.</h1>
 		<p class="hero-byline">

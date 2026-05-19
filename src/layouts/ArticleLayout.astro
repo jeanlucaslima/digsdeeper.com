@@ -44,6 +44,34 @@ const {
 } = Astro.props;
 
 const meta = description ?? subtitle ?? thesis ?? claim ?? title;
+
+const SITE_URL = 'https://digsdeeper.com';
+const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? SITE_URL).toString();
+
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	headline: title,
+	description: meta,
+	url: canonicalURL,
+	mainEntityOfPage: canonicalURL,
+	datePublished: published.toISOString(),
+	...(updated && { dateModified: updated.toISOString() }),
+	...(topics && topics.length > 0 && { keywords: topics.join(', ') }),
+	...(field && { articleSection: field }),
+	...(thesis ? { abstract: thesis } : claim ? { abstract: claim } : {}),
+	author: {
+		'@type': 'Person',
+		'@id': `${SITE_URL}/#person`,
+		name: 'Jean Lucas Lima',
+		url: 'https://jeanlucas.me',
+	},
+	publisher: {
+		'@type': 'Organization',
+		name: 'digsdeeper',
+		url: SITE_URL,
+	},
+};
 ---
 
 <Layout
@@ -53,6 +81,7 @@ const meta = description ?? subtitle ?? thesis ?? claim ?? title;
 	published={published}
 	updated={updated}
 	canonical={canonical}
+	jsonLd={jsonLd}
 >
 	<article class="container article">
 		<MetadataRail
