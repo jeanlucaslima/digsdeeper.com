@@ -1,12 +1,18 @@
 ---
 import Layout from './Layout.astro';
-import MetadataRail from '../components/MetadataRail.astro';
+import ArticlePanel from '../components/ArticlePanel.astro';
+import MobileChapters from '../components/MobileChapters.astro';
 import ThesisBlock from '../components/ThesisBlock.astro';
-import { formatDate } from '../lib/format';
+import { formatDate, formatYearMonth } from '../lib/format';
 
 interface RelatedLink {
 	href: string;
 	title: string;
+}
+
+interface Heading {
+	slug: string;
+	text: string;
 }
 
 interface Props {
@@ -24,6 +30,7 @@ interface Props {
 	related?: RelatedLink[];
 	description?: string;
 	canonical?: string;
+	headings?: Heading[];
 }
 
 const {
@@ -41,12 +48,16 @@ const {
 	related = [],
 	description,
 	canonical,
+	headings = [],
 } = Astro.props;
 
 const meta = description ?? subtitle ?? thesis ?? claim ?? title;
 
 const SITE_URL = 'https://digsdeeper.com';
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site ?? SITE_URL).toString();
+
+const hasChapters = headings.length >= 2;
+const contextLine = field ?? (topics && topics.length ? topics.join(', ') : undefined);
 
 const jsonLd = {
 	'@context': 'https://schema.org',
@@ -83,57 +94,178 @@ const jsonLd = {
 	canonical={canonical}
 	jsonLd={jsonLd}
 >
-	<article class="container article">
-		<MetadataRail
-			type={type}
-			status={status}
-			field={field}
-			topics={topics}
-			published={published}
-			updated={updated}
-			series={series}
-		/>
+	<div class={`article-shell${hasChapters ? ' has-chapters' : ''}`}>
+		<MobileChapters chapters={headings} />
 
-		<div>
-			<header>
-				<h1>{title}</h1>
-				{subtitle && <p class="subtitle">{subtitle}</p>}
-				{thesis && <ThesisBlock text={thesis} variant="thesis" />}
-				{claim && !thesis && <ThesisBlock text={claim} variant="claim" />}
-			</header>
+		<article class="container article">
+			<ArticlePanel
+				type={type}
+				status={status}
+				field={field}
+				topics={topics}
+				published={published}
+				updated={updated}
+				series={series}
+				chapters={headings}
+			/>
 
-			<div class="prose">
-				<slot />
-			</div>
+			<div class="article-body">
+				<header>
+					<h1>{title}</h1>
+					{subtitle && <p class="subtitle">{subtitle}</p>}
+					<p class="article-meta-summary">
+						<span>{type} · {status}</span>
+						{contextLine && <span> · {contextLine}</span>}
+						<span> · Published <time datetime={published.toISOString()}>{formatYearMonth(published)}</time></span>
+						{series && <span> · Series: <a href={`/series/${series.slug}`}>{series.title}</a></span>}
+					</p>
+					{thesis && <ThesisBlock text={thesis} variant="thesis" />}
+					{claim && !thesis && <ThesisBlock text={claim} variant="claim" />}
+				</header>
 
-			<footer class="trail">
-				<div>
-					<span>First published: <time datetime={published.toISOString()}>{formatDate(published)}</time></span>
-					{updated && <span> · Last updated: <time datetime={updated.toISOString()}>{formatDate(updated)}</time></span>}
+				<div class="prose">
+					<slot />
 				</div>
-				{related.length > 0 && (
-					<div class="trail-group">
-						<span class="label">Continues</span>
-						<ul>
-							{related.map((r) => (
+
+				<footer class="trail">
+					<div>
+						<span>First published: <time datetime={published.toISOString()}>{formatDate(published)}</time></span>
+						{updated && <span> · Last updated: <time datetime={updated.toISOString()}>{formatDate(updated)}</time></span>}
+					</div>
+					{related.length > 0 && (
+						<div class="trail-group">
+							<span class="label">Continues</span>
+							<ul>
+								{related.map((r) => (
+									<li>
+										<a href={r.href}>{r.title}</a>
+									</li>
+								))}
+							</ul>
+						</div>
+					)}
+					{series && (
+						<div class="trail-group">
+							<span class="label">Series</span>
+							<ul>
 								<li>
-									<a href={r.href}>{r.title}</a>
+									<a href={`/series/${series.slug}`}>{series.title}</a>
 								</li>
-							))}
-						</ul>
-					</div>
-				)}
-				{series && (
-					<div class="trail-group">
-						<span class="label">Series</span>
-						<ul>
-							<li>
-								<a href={`/series/${series.slug}`}>{series.title}</a>
-							</li>
-						</ul>
-					</div>
-				)}
-			</footer>
-		</div>
-	</article>
+							</ul>
+						</div>
+					)}
+				</footer>
+			</div>
+		</article>
+	</div>
 </Layout>
+
+{hasChapters && (
+	<script>
+		(function () {
+			const prose = document.querySelector<HTMLElement>('.article .prose');
+			if (!prose) return;
+			const sections = Array.from(prose.querySelectorAll<HTMLHeadingElement>('h2[id]'));
+			if (sections.length === 0) return;
+
+			const desktopLinks = new Map<string, HTMLAnchorElement>();
+			document.querySelectorAll<HTMLAnchorElement>('[data-chapter-link]').forEach((a) => {
+				const slug = a.getAttribute('data-chapter-link');
+				if (slug) desktopLinks.set(slug, a);
+			});
+
+			const mobileLinks = new Map<string, HTMLAnchorElement>();
+			document.querySelectorAll<HTMLAnchorElement>('[data-mobile-chapter-link]').forEach((a) => {
+				const slug = a.getAttribute('data-mobile-chapter-link');
+				if (slug) mobileLinks.set(slug, a);
+			});
+
+			const currentLabel = document.querySelector<HTMLElement>('[data-mobile-chapters-current]');
+			const slugToText = new Map<string, string>();
+			sections.forEach((s) => slugToText.set(s.id, s.textContent?.trim() ?? ''));
+
+			function setActive(slug: string | null) {
+				desktopLinks.forEach((a, s) => {
+					if (s === slug) {
+						a.setAttribute('aria-current', 'true');
+						a.parentElement?.classList.add('is-active');
+					} else {
+						a.removeAttribute('aria-current');
+						a.parentElement?.classList.remove('is-active');
+					}
+				});
+				mobileLinks.forEach((a, s) => {
+					if (s === slug) a.setAttribute('aria-current', 'true');
+					else a.removeAttribute('aria-current');
+				});
+				if (currentLabel) {
+					currentLabel.textContent = slug ? slugToText.get(slug) ?? '' : '';
+				}
+			}
+
+			// Pick the section whose top has most recently crossed the offset line.
+			function getOffset() {
+				const padTop = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+				return padTop + 8;
+			}
+
+			function update() {
+				const offset = getOffset();
+				let active: string | null = sections[0].id;
+				for (const s of sections) {
+					const rect = s.getBoundingClientRect();
+					if (rect.top <= offset) active = s.id;
+					else break;
+				}
+				setActive(active);
+			}
+
+			let ticking = false;
+			function onScroll() {
+				if (ticking) return;
+				ticking = true;
+				requestAnimationFrame(() => {
+					update();
+					ticking = false;
+				});
+			}
+			document.addEventListener('scroll', onScroll, { passive: true });
+			window.addEventListener('resize', onScroll);
+			update();
+
+			// Mobile drawer
+			const drawer = document.querySelector<HTMLElement>('[data-mobile-chapter-drawer]');
+			const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-chapters-toggle]');
+			function setDrawer(open: boolean) {
+				if (!drawer || !toggle) return;
+				drawer.setAttribute('data-open', open ? 'true' : 'false');
+				toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+				if (open) drawer.removeAttribute('inert');
+				else drawer.setAttribute('inert', '');
+			}
+			toggle?.addEventListener('click', () => {
+				const open = drawer?.getAttribute('data-open') === 'true';
+				setDrawer(!open);
+			});
+			mobileLinks.forEach((a) => {
+				a.addEventListener('click', () => setDrawer(false));
+			});
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && drawer?.getAttribute('data-open') === 'true') {
+					e.preventDefault();
+					setDrawer(false);
+					toggle?.focus();
+				}
+			});
+
+			// Close drawer if site menu opens.
+			const siteMenu = document.getElementById('site-menu');
+			if (siteMenu) {
+				const obs = new MutationObserver(() => {
+					if (siteMenu.getAttribute('data-open') === 'true') setDrawer(false);
+				});
+				obs.observe(siteMenu, { attributes: true, attributeFilter: ['data-open'] });
+			}
+		})();
+	</script>
+)}

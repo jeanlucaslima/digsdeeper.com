@@ -8,7 +8,10 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
+const chapterHeadings = headings
+	.filter((h) => h.depth === 2)
+	.map((h) => ({ slug: h.slug, text: h.text }));
 
 const allEssays = await getCollection('essays');
 const allNotes = await getCollection('notes');
@@ -43,6 +46,7 @@ const related = entry.data.related
 	related={related}
 	canonical={entry.data.canonical}
 	description={entry.data.summary ?? entry.data.thesis}
+	headings={chapterHeadings}
 >
 	<Content />
 </ArticleLayout>

@@ -1,0 +1,89 @@
+---
+import { formatYearMonth } from '../lib/format';
+
+interface Heading {
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	type: string;
+	status: string;
+	field?: string;
+	topics?: string[];
+	published?: Date;
+	updated?: Date;
+	series?: { slug: string; title: string };
+	chapters?: Heading[];
+}
+
+const {
+	type,
+	status,
+	field,
+	topics = [],
+	published,
+	updated,
+	series,
+	chapters = [],
+} = Astro.props;
+
+const contextLine = field ?? (topics.length ? topics.join(', ') : undefined);
+const showChapters = chapters.length >= 2;
+---
+
+<aside class="article-panel" aria-label="Article information">
+	<div class="panel-group panel-identity">
+		<span class="panel-eyebrow">{type}</span>
+		<div class="panel-row">
+			<span class="panel-label">Status</span>
+			<span class="panel-value">{status}</span>
+		</div>
+	</div>
+
+	<div class="panel-group panel-context">
+		{published && (
+			<div class="panel-row">
+				<span class="panel-label">Published</span>
+				<time class="panel-value" datetime={published.toISOString()}>{formatYearMonth(published)}</time>
+			</div>
+		)}
+		<div class="panel-row">
+			<span class="panel-label">Updated</span>
+			{updated ? (
+				<time class="panel-value" datetime={updated.toISOString()}>{formatYearMonth(updated)}</time>
+			) : (
+				<span class="panel-value muted">—</span>
+			)}
+		</div>
+		{contextLine && (
+			<div class="panel-row panel-row-stack">
+				<span class="panel-label">Field</span>
+				<span class="panel-value">{contextLine}</span>
+			</div>
+		)}
+	</div>
+
+	{series && (
+		<div class="panel-group panel-series">
+			<span class="panel-label">Series</span>
+			<a class="panel-series-link" href={`/series/${series.slug}`}>{series.title}</a>
+		</div>
+	)}
+
+	{showChapters && (
+		<nav class="panel-group panel-chapters" aria-label="Chapters">
+			<span class="panel-label">Chapters</span>
+			<ol class="chapter-list" data-chapter-list>
+				{chapters.map((h, i) => (
+					<li class="chapter-item">
+						<a class="chapter-link" href={`#${h.slug}`} data-chapter-link={h.slug}>
+							<span class="chapter-num">{String(i + 1).padStart(2, '0')}</span>
+							<span class="chapter-text">{h.text}</span>
+						</a>
+					</li>
+				))}
+			</ol>
+		</nav>
+	)}
+</aside>

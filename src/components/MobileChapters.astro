@@ -1,0 +1,53 @@
+---
+interface Heading {
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	chapters?: Heading[];
+}
+
+const { chapters = [] } = Astro.props;
+---
+
+{chapters.length >= 2 && (
+	<>
+		<div class="mobile-chapters" data-mobile-chapters>
+			<button
+				type="button"
+				class="mobile-chapters-bar"
+				data-mobile-chapters-toggle
+				aria-controls="mobile-chapter-drawer"
+				aria-expanded="false"
+			>
+				<span class="mobile-chapters-label">Chapters</span>
+				<span class="mobile-chapters-current" data-mobile-chapters-current aria-live="polite"></span>
+				<span class="mobile-chapters-caret" aria-hidden="true">▾</span>
+			</button>
+			<div
+				id="mobile-chapter-drawer"
+				class="mobile-chapter-drawer"
+				data-mobile-chapter-drawer
+				data-open="false"
+				role="dialog"
+				aria-label="Chapters"
+				inert
+			>
+				<ol class="mobile-chapter-list" data-mobile-chapter-list>
+					{chapters.map((h, i) => (
+						<li>
+							<a
+								href={`#${h.slug}`}
+								data-mobile-chapter-link={h.slug}
+							>
+								<span class="chapter-num">{String(i + 1).padStart(2, '0')}</span>
+								<span class="chapter-text">{h.text}</span>
+							</a>
+						</li>
+					))}
+				</ol>
+			</div>
+		</div>
+	</>
+)}
