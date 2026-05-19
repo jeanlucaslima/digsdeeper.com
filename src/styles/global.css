@@ -12,7 +12,7 @@
 	--alert: #9c3b2e;
 	--notice: #efe5c4;
 
-	--font-sans: 'Google Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 	--font-display: var(--font-sans);
 	--font-body: var(--font-sans);
 	--font-meta: var(--font-sans);

@@ -14,7 +14,7 @@
     "og:generate": "node scripts/generate-og-images.mjs"
   },
   "dependencies": {
-    "@fontsource/google-sans": "^5.2.1",
+    "@fontsource/instrument-sans": "^5.2.8",
     "@plausible-analytics/tracker": "^0.4.5",
     "astro": "^6.3.5"
   },
